@@ -16,4 +16,4 @@ RUN AUTO_JDKURLINFO=$(curl -ls ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-8u.*\-linux\
     echo "${AUTO_JDKMD5}  ${AUTO_JDKFILE}" >> MD5SUM && \
     md5sum -c MD5SUM && \
     rpm -Uvh $AUTO_JDKFILE && \
-    rm -f $AUTO_JDKFILE
+    rm -f $AUTO_JDKFILE MD5SUM
