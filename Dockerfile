@@ -6,7 +6,7 @@ LABEL   os.version="centos" \
         container.description="oracle jdk 8"
 
 ARG JAVA_VERSION_TIMESTAMP="2133151"
-ARG JAVA_DOWNLOAD_URL="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-$JAVA_VERSION_TIMESTAMP.html"
+ARG JAVA_DOWNLOAD_URL="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-$JAVA_VERSION_TIMESTAMP.html"
 
 RUN AUTO_JDKURLINFO=$(curl -ls ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-8u.*\-linux\-x64\.rpm ) && \
     AUTO_JDKURL=$(echo ${AUTO_JDKURLINFO} | sed -e 's/.*"filepath":"\(.*\)","MD5":.*/\1/g') && \
