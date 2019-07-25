@@ -4,28 +4,33 @@ services:
   - 'docker'
 
 before_install:
+  - export JAVA_VERSION=$(grep imagename Dockerfile | sed -e 's/.*JAVA_VERSION="\(.*\)".*/\1/')
+  - export JAVA_VERSION_TIMESTAMP=$(grep imagename Dockerfile | sed -e 's/.*JAVA_VERSION_TIMESTAMP="\(.*\)".*/\1/')
+  - export JAVA_DOWNLOAD_URL=$(grep imagename Dockerfile | sed -e 's/.*JAVA_DOWNLOAD_URL="\(.*\)".*/\1/')
+  - echo JAVA_DOWNLOAD_URL=$JAVA_DOWNLOAD_URL
+  - export AUTO_JDKURLINFO=$(curl -LsN ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-${JAVA_VERSION}.*linux.*x64.*.rpm )
+  - echo AUTO_JDKURLINFO=$AUTO_JDKURLINFO
+  - export AUTO_JDKURL=$(echo ${AUTO_JDKURLINFO} | sed -e 's/.*"filepath":"\(http.*.rpm\)".*/\1/g' )
+  - echo AUTO_JDKURL=$AUTO_JDKURL
+  - export TEXT_EXPECTED=$(echo ${AUTO_JDKURL} | sed -e "s/.*jdk-${JAVA_VERSION}u\(.*\)[-_]linux.*/\1/g")
+  - echo TEXT_EXPECTED=$TEXT_EXPECTED
   - export IMAGE_NAME=$(grep imagename Dockerfile | sed -e 's/.*imagename="\(.*\)".*/\1/')
   - export IMAGE_VERSION=$(grep version Dockerfile | sed -e 's/.*version="\(.*\)".*/\1/')
   - export IMAGE="$ORGANISATION_NAME/$IMAGE_NAME"
   - echo IMAGE_NAME=$IMAGE_NAME
   - echo IMAGE_VERSION=$IMAGE_VERSION
-  - echo New Image Tag=$IMAGE:$IMAGE_VERSION
 
 #build
 install:
-  - docker build --pull -t $IMAGE .
+  - docker images
+  - docker build --pull -t $IMAGE:$IMAGE_VERSION --build-arg ORACLE_USERNAME=${ORACLE_USERNAME} --build-arg ORACLE_PASSWORD=${ORACLE_PASSWORD} .
   - docker tag $IMAGE:$IMAGE_VERSION $IMAGE:latest
+  - export CONTAINER_OUTPUT=$(docker run $IMAGE:$IMAGE_VERSION java -version 2>&1 | grep "java version" | sed -e 's/.*java version "\(.*\)".*/\1/')
+  - docker tag $IMAGE:$IMAGE_VERSION $IMAGE:$CONTAINER_OUTPUT
+  - docker images
 
 #test
 script:
-  - export CONTAINER_OUTPUT=$(docker run $IMAGE:$IMAGE_VERSION java -version 2>&1 | grep "java version" | sed -e 's/.*java version "\(.*\)".*/\1/')
-  - >-
-    export JAVA_VERSION="8" &&
-    export JAVA_VERSION_TIMESTAMP="2133151" &&
-    export JAVA_DOWNLOAD_URL="http://www.oracle.com/technetwork/java/javase/downloads/jdk${JAVA_VERSION}-downloads-${JAVA_VERSION_TIMESTAMP}.html" &&
-    export AUTO_JDKURLINFO=$(curl -LsN ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-${JAVA_VERSION}.*linux.*x64.*.rpm ) &&
-    AUTO_JDKURL=$(echo ${AUTO_JDKURLINFO} | sed -e 's/.*"filepath":"\(http.*.rpm\)".*/\1/g' ) &&
-    export TEXT_EXPECTED=$(echo ${AUTO_JDKURL} | sed -e "s/.*jdk-${JAVA_VERSION}u\(.*\)[-_]linux.*/\1/g")
   - if [[ "$CONTAINER_OUTPUT" != *$TEXT_EXPECTED* ]]; then echo "CONTAINER TEST DID NOT PASS" && exit 1; fi
 
 
