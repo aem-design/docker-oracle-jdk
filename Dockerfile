@@ -2,8 +2,10 @@ FROM        aemdesign/centos-tini:latest
 
 MAINTAINER  devops <devops@aem.design>
 
-LABEL   os.version="centos" \
-        container.description="oracle jdk 8"
+LABEL   os="centos" \
+        container.description="oracle jdk 8" \
+        version="1.0-jdk8" \
+        imagename="aemdesign\oracle-jdk"
 
 ARG JAVA_VERSION_TIMESTAMP="2133151"
 ARG JAVA_DOWNLOAD_URL="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-$JAVA_VERSION_TIMESTAMP.html"
