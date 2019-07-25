@@ -9,6 +9,7 @@ before_install:
   - export CONTAINER_TEST_IMAGE=$ORGANISATION_NAME/$IMAGE_NAME:$IMAGE_VERSION
   - echo IMAGE_NAME=$IMAGE_NAME
   - echo IMAGE_VERSION=$IMAGE_VERSION
+  - echo "New Tag\:$IMAGE_NAME\:$IMAGE_VERSION"
 
 #build
 install:
