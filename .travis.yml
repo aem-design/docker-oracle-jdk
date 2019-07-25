@@ -4,9 +4,9 @@ services:
   - 'docker'
 
 before_install:
-  - export JAVA_VERSION=$(grep imagename Dockerfile | sed -e 's/.*JAVA_VERSION="\(.*\)".*/\1/')
-  - export JAVA_VERSION_TIMESTAMP=$(grep imagename Dockerfile | sed -e 's/.*JAVA_VERSION_TIMESTAMP="\(.*\)".*/\1/')
-  - export JAVA_DOWNLOAD_URL=$(grep imagename Dockerfile | sed -e 's/.*JAVA_DOWNLOAD_URL="\(.*\)".*/\1/')
+  - export JAVA_VERSION=$(grep "ARG JAVA_VERSION=" Dockerfile | sed -e 's/.*JAVA_VERSION="\(.*\)".*/\1/')
+  - export JAVA_VERSION_TIMESTAMP=$(grep "ARG JAVA_VERSION_TIMESTAMP=" Dockerfile | sed -e 's/.*JAVA_VERSION_TIMESTAMP="\(.*\)".*/\1/')
+  - export JAVA_DOWNLOAD_URL=$(grep "ARG JAVA_DOWNLOAD_URL=" Dockerfile | sed -e 's/.*JAVA_DOWNLOAD_URL="\(.*\)".*/\1/')
   - echo JAVA_DOWNLOAD_URL=$JAVA_DOWNLOAD_URL
   - export AUTO_JDKURLINFO=$(curl -LsN ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-${JAVA_VERSION}.*linux.*x64.*.rpm )
   - echo AUTO_JDKURLINFO=$AUTO_JDKURLINFO
