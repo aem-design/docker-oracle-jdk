@@ -4,8 +4,8 @@ services:
   - 'docker'
 
 before_install:
-  - export IMAGE_NAME=$(grep imagename Dockerfile | sed -e 's/imagename="\(.*\)"/\1/')
-  - export IMAGE_VERSION=$(grep version Dockerfile | sed -e 's/version="\(.*\)"/\1/')
+  - export IMAGE_NAME=$(grep imagename Dockerfile | sed -e 's/.*imagename="\(.*\)".*/\1/')
+  - export IMAGE_VERSION=$(grep version Dockerfile | sed -e 's/.*version="\(.*\)".*/\1/')
   - export CONTAINER_TEST_IMAGE=$ORGANISATION_NAME/$IMAGE_NAME:$IMAGE_VERSION
   - echo IMAGE_NAME=$IMAGE_NAME
   - echo IMAGE_VERSION=$IMAGE_VERSION
@@ -18,7 +18,7 @@ install:
 
 #test
 script:
-  - export CONTAINER_OUTPUT=$(docker run $CONTAINER_TEST_IMAGE java -version 2>&1 | grep "java version" | sed -e 's/java version "\(.*\)"/\1/')
+  - export CONTAINER_OUTPUT=$(docker run $CONTAINER_TEST_IMAGE java -version 2>&1 | grep "java version" | sed -e 's/.*java version "\(.*\)".*/\1/')
   - >-
     export JAVA_VERSION="8" &&
     export JAVA_VERSION_TIMESTAMP="2133151" &&
