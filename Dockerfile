@@ -21,6 +21,7 @@ RUN chmod +x oracle-download.sh && \
     AUTO_JDKMD5=$(echo ${AUTO_JDKURLINFO} | sed -e 's/.*"MD5":"\(.*\)",".*/\1/g' )  && \
     AUTO_JDKFILE=$(echo ${AUTO_JDKURL} | sed 's,^[^ ]*/,,' ) && \
     echo ./oracle-download.sh --cookie=accept-securebackup-cookie --output=${AUTO_JDKFILE} --password=${ORACLE_PASSWORD} --username=${ORACLE_USERNAME} ${AUTO_JDKURL} && \
+    echo $(./oracle-download.sh --cookie=accept-securebackup-cookie --output=${AUTO_JDKFILE} --password=${ORACLE_PASSWORD} --username=${ORACLE_USERNAME} ${AUTO_JDKURL}) && \
     echo "${AUTO_JDKMD5}  ${AUTO_JDKFILE}" >> MD5SUM && \
     md5sum -c MD5SUM && \
     rpm -Uvh $AUTO_JDKFILE && \
