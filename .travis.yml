@@ -39,14 +39,16 @@ script:
 
 #login to hub.docker
 before_deploy:
-  - if [[ $TRAVIS_BRANCH != "master" ]]; then echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin; fi
+  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
 #deploy to hub.docker
 deploy:
-  provider: script
-  script: docker push $IMAGE:$IMAGE_VERSION && docker push $IMAGE:latest
-  on:
-    branch: master
+ -  provider: script
+    script: docker push $IMAGE:$IMAGE_VERSION
+ -  provider: script
+    script: docker push $IMAGE:latest
+    on:
+      branch: master
 
 #update readme in hub.docker
 after_deploy:
