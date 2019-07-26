@@ -17,12 +17,17 @@ COPY oracle-download.sh .
 
 RUN chmod +x oracle-download.sh && \
     AUTO_JDKURLINFO=$(curl -LsN ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-${JAVA_VERSION}.*linux.*x64.*.rpm ) && \
+    echo AUTO_JDKURLINFO=$AUTO_JDKURLINFO && \
     AUTO_JDKURL=$(echo ${AUTO_JDKURLINFO} | sed -e 's/.*"filepath":"\(http.*.rpm\)".*/\1/g' ) && \
+    echo AUTO_JDKURL=$AUTO_JDKURL && \
     AUTO_JDKSHA256=$(echo ${AUTO_JDKURLINFO} | sed -e 's/.*"SHA256":"\(.*\)",".*/\1/g' )  && \
+    echo AUTO_JDKSHA256=$AUTO_JDKSHA256 && \
     AUTO_JDKFILE=$(echo ${AUTO_JDKURL} | sed 's,^[^ ]*/,,' ) && \
+    echo AUTO_JDKFILE=$AUTO_JDKFILE && \
     echo ./oracle-download.sh --cookie=accept-securebackup-cookie --output=${AUTO_JDKFILE} --password=${ORACLE_PASSWORD} --username=${ORACLE_USERNAME} ${AUTO_JDKURL} && \
     echo $(./oracle-download.sh --cookie=accept-securebackup-cookie --output=${AUTO_JDKFILE} --password=${ORACLE_PASSWORD} --username=${ORACLE_USERNAME} ${AUTO_JDKURL}) && \
     echo "${AUTO_JDKSHA256}  ${AUTO_JDKFILE}" >> CHECKSUM && \
+    cat CHECKSUM && \
     sha256sum -c CHECKSUM && \
     rpm -Uvh $AUTO_JDKFILE && \
     rm -f $AUTO_JDKFILE CHECKSUM
