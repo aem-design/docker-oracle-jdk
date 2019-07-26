@@ -46,9 +46,7 @@ deploy:
  -  provider: script
     script: docker push $IMAGE:$IMAGE_VERSION
  -  provider: script
-    script: docker push $IMAGE:latest
-    on:
-      branch: master
+    script: if [[ $TRAVIS_BRANCH == "master" ]]; then docker push $IMAGE:latest; fi
 
 #update readme in hub.docker
 after_deploy:
