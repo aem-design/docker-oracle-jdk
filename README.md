@@ -43,12 +43,12 @@ export JAVA_DOWNLOAD_URL="http://www.oracle.com/technetwork/java/javase/download
 export AUTO_JDKURLINFO=$(curl -LsN ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-${JAVA_VERSION}\.*linux\.*x64.*.rpm ) && \
 echo AUTO_JDKURLINFO=$AUTO_JDKURLINFO && \
 AUTO_JDKURL=$(echo ${AUTO_JDKURLINFO} | sed -e 's/.*"filepath":"\(http.*.rpm\)".*/\1/g' ) && \
-AUTO_JDKMD5=$(echo ${AUTO_JDKURLINFO} | sed -e 's/.*"SHA256":"\(.*\)".*/\1/g' )  && \
+AUTO_JDKSHA256=$(echo ${AUTO_JDKURLINFO} | sed -e 's/.*"SHA256":"\(.*\)".*/\1/g' )  && \
 export AUTO_JDKFILE=$(echo ${AUTO_JDKURL} | sed 's,^[^ ]*/,,' ) && \
 echo JAVA_VERSION_TIMESTAMP=$JAVA_VERSION_TIMESTAMP && \
 echo JAVA_DOWNLOAD_URL=$JAVA_DOWNLOAD_URL && \
 echo AUTO_JDKURL=$AUTO_JDKURL && \
-echo AUTO_JDKMD5=$AUTO_JDKMD5 && \
+echo AUTO_JDKSHA256=$AUTO_JDKSHA256 && \
 echo AUTO_JDKFILE=$AUTO_JDKFILE
 ```
 
