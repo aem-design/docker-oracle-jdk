@@ -15,7 +15,7 @@ before_install:
   - echo AUTO_JDKURLINFO=$AUTO_JDKURLINFO
   - export AUTO_JDKURL=$(echo ${AUTO_JDKURLINFO} | sed -e 's/.*"filepath":"\(http.*.rpm\)".*/\1/g' )
   - echo AUTO_JDKURL=$AUTO_JDKURL
-  - export TEXT_EXPECTED=$(echo ${AUTO_JDKURL} | sed -e "s/.*jdk-\(.*\)[-_]linux.*/\1/g")
+  - export TEXT_EXPECTED=$(echo ${AUTO_JDKURL} | sed -e "s/.*jdk-${JAVA_VERSION}u\(.*\)[-_]linux.*/\1/g")
   - echo TEXT_EXPECTED=$TEXT_EXPECTED
   - export IMAGE_NAME=$(grep imagename Dockerfile | sed -e 's/.*imagename="\(.*\)".*/\1/')
   - export IMAGE_VERSION=$(grep version Dockerfile | sed -e 's/.*version="\(.*\)".*/\1/')
