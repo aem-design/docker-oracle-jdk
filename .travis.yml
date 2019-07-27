@@ -36,17 +36,9 @@ install:
 #test
 script:
   - if [[ ! ${CONTAINER_OUTPUT} =~ ${TEXT_EXPECTED} ]]; then travis_terminate 1; fi
-
-
-#login to hub.docker
-before_deploy:
+  - echo "LOGIN TO HUB.DOCKER"
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-
-#deploy to hub.docker
-deploy:
-  - provider: script
-    script: docker push $IMAGE:$IMAGE_VERSION && docker push $IMAGE:$CONTAINER_OUTPUT && if [[ $TRAVIS_BRANCH == "master" ]]; then docker push $IMAGE:latest; fi
-
-#update readme in hub.docker
-after_deploy:
+  - echo "PUSH HUB.DOCKER"
+  - docker push $IMAGE:$IMAGE_VERSION && docker push $IMAGE:$CONTAINER_OUTPUT && if [[ $TRAVIS_BRANCH == "master" ]]; then docker push $IMAGE:latest; fi
+  - echo "UPDATE README IN HUB.DOCKER"
   - if [[ $TRAVIS_BRANCH != "master" ]]; then docker run --rm -v $(pwd)/README.md:/data/README.md -e DOCKERHUB_USERNAME=$DOCKER_USERNAME -e DOCKERHUB_PASSWORD=$DOCKER_PASSWORD -e DOCKERHUB_REPO_PREFIX=$ORGANISATION_NAME -e DOCKERHUB_REPO_NAME=$IMAGE sheogorath/readme-to-dockerhub; fi
