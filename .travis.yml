@@ -35,7 +35,7 @@ install:
 
 #test
 script:
-  - if [[ "$CONTAINER_OUTPUT" != *$TEXT_EXPECTED* ]]; then echo "CONTAINER TEST DID NOT PASS" && exit 1; else echo "CONTAINER TEST PASSED"; fi
+  - if [[ "${CONTAINER_OUTPUT}" != *${TEXT_EXPECTED}* ]]; then echo "CONTAINER TEST DID NOT PASS" && exit 1; fi
 
 
 #login to hub.docker
