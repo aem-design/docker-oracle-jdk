@@ -2,6 +2,7 @@
 
 [![build_status](https://travis-ci.org/aem-design/oracle-jdk.svg?branch=master)](https://travis-ci.org/aem-design/oracle-jdk)
 
+[![dockeri.co](https://dockeri.co/image/aemdesign/oracle-jdk)](https://hub.docker.com/r/aemdesign/oracle-jdk)
 
 
 This is docker image based on [aemdesign/centos-tini](https://hub.docker.com/r/aemdesign/centos-tini/) with Oracle JDK added.
