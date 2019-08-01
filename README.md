@@ -7,6 +7,7 @@
 [![github repo size](https://img.shields.io/github/repo-size/aem-design/oracle-jdk)](https://github.com/aem-design/oracle-jdk) 
 [![docker stars](https://img.shields.io/docker/stars/aemdesign/oracle-jdk)](https://hub.docker.com/r/aemdesign/oracle-jdk) 
 [![docker pulls](https://img.shields.io/docker/pulls/aemdesign/oracle-jdk)](https://hub.docker.com/r/aemdesign/oracle-jdk) 
+[![github release](https://img.shields.io/github/release/aem-design/centos-tini)](https://github.com/aem-design/centos-tini)
 
 This is docker image based on [aemdesign/centos-tini](https://hub.docker.com/r/aemdesign/centos-tini/) with Oracle JDK added.
 
