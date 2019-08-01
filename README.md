@@ -1,9 +1,12 @@
 ## CentOS 7 with Oracle JDK
 
 [![build_status](https://travis-ci.org/aem-design/oracle-jdk.svg?branch=master)](https://travis-ci.org/aem-design/oracle-jdk)
-
-[![dockeri.co](https://dockeri.co/image/aemdesign/oracle-jdk)](https://hub.docker.com/r/aemdesign/oracle-jdk)
-
+[![github license](https://img.shields.io/github/license/aem-design/oracle-jdk)](https://github.com/aem-design/oracle-jdk) 
+[![github issues](https://img.shields.io/github/issues/aem-design/oracle-jdk)](https://github.com/aem-design/oracle-jdk) 
+[![github last commit](https://img.shields.io/github/last-commit/aem-design/oracle-jdk)](https://github.com/aem-design/oracle-jdk) 
+[![github repo size](https://img.shields.io/github/repo-size/aem-design/oracle-jdk)](https://github.com/aem-design/oracle-jdk) 
+[![docker stars](https://img.shields.io/docker/stars/aemdesign/oracle-jdk)](https://hub.docker.com/r/aemdesign/oracle-jdk) 
+[![docker pulls](https://img.shields.io/docker/pulls/aemdesign/oracle-jdk)](https://hub.docker.com/r/aemdesign/oracle-jdk) 
 
 This is docker image based on [aemdesign/centos-tini](https://hub.docker.com/r/aemdesign/centos-tini/) with Oracle JDK added.
 
