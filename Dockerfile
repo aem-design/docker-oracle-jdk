@@ -5,7 +5,10 @@ MAINTAINER  devops <devops@aem.design>
 LABEL   os="centos" \
         container.description="oracle jdk" \
         version="1.0-jdk11" \
-        imagename="oracle-jdk"
+        imagename="oracle-jdk" \
+        test.command=" java -version 2>&1 | grep 'java version' | sed -e 's/.*java version "\(.*\)".*/\1/'" \
+        test.command.verify="11."
+
 
 ARG JAVA_VERSION="11"
 ARG JAVA_VERSION_TIMESTAMP="5066655"

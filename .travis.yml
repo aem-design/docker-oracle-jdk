@@ -4,57 +4,60 @@ services:
   - 'docker'
 
 before_install:
-  - export JAVA_VERSION=$(grep "ARG JAVA_VERSION=" Dockerfile | sed -e 's/.*JAVA_VERSION="\(.*\)".*/\1/')
-  - echo JAVA_VERSION=$JAVA_VERSION
-  - export JAVA_VERSION_TIMESTAMP=$(grep "ARG JAVA_VERSION_TIMESTAMP=" Dockerfile | sed -e 's/.*JAVA_VERSION_TIMESTAMP="\(.*\)".*/\1/')
-  - echo JAVA_VERSION_TIMESTAMP=$JAVA_VERSION_TIMESTAMP
-  - export JAVA_DOWNLOAD_URL=$(grep "ARG JAVA_DOWNLOAD_URL=" Dockerfile | sed -e 's/.*JAVA_DOWNLOAD_URL="\(.*\)".*/\1/')
-  - export JAVA_DOWNLOAD_URL=$(eval "echo $JAVA_DOWNLOAD_URL")
-  - echo JAVA_DOWNLOAD_URL=$JAVA_DOWNLOAD_URL
-  - export AUTO_JDKURLINFO=$(curl -LsN ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-${JAVA_VERSION}.*linux.*x64.*.rpm )
-  - echo AUTO_JDKURLINFO=$AUTO_JDKURLINFO
-  - export AUTO_JDKURL=$(echo ${AUTO_JDKURLINFO} | sed -e 's/.*"filepath":"\(http.*.rpm\)".*/\1/g' )
-  - echo AUTO_JDKURL=$AUTO_JDKURL
-  - export TEXT_EXPECTED=$(echo ${AUTO_JDKURL} | sed -e "s/.*jdk-\(.*\)[-_]linux.*/\1/g")
-  - echo TEXT_EXPECTED=$TEXT_EXPECTED
-  - export IMAGE_NAME=$(grep imagename Dockerfile | sed -e 's/.*imagename="\(.*\)".*/\1/')
-  - export IMAGE_VERSION=$(grep version Dockerfile | sed -e 's/.*version="\(.*\)".*/\1/')
+  - echo GET CONFIG FROM DOCKERFILE
+  - export IMAGE_NAME=$(grep imagename= Dockerfile | sed -e 's/.*imagename="\(.*\)".*/\1/')
+  - export TEST_COMMAND=$(grep test.command= Dockerfile | sed -e 's/.*test.command="\(.*\)".*/\1/')
+  - export TEST_COMMAND_VERIFY=$(grep test.command.verify= Dockerfile | sed -e 's/.*test.command.verify="\(.*\)".*/\1/')
+  - export IMAGE_VERSION=$(grep version= Dockerfile | sed -e 's/.*version="\(.*\)".*/\1/')
   - export IMAGE="$ORGANISATION_NAME/$IMAGE_NAME"
   - echo IMAGE_NAME=$IMAGE_NAME
   - echo IMAGE_VERSION=$IMAGE_VERSION
+  - echo TEST_COMMAND=$TEST_COMMAND
+  - echo TEST_COMMAND_VERIFY=$TEST_COMMAND_VERIFY
+  - echo GET CONFIG FROM GIT
+  - export CURRENT_VERSION=$(git describe --tag --always --long | sed -e 's/\(.*\)-\(.*\)-.*/\1.\2/')
+  - declare -a CURRENT_VERSION_ARRAY="(${CURRENT_VERSION//./ })"; export SEMVER_MAJOR=${CURRENT_VERSION_ARRAY[0]}; export SEMVER_MINOR=${CURRENT_VERSION_ARRAY[1]}; export SEMVER_BUILD=${CURRENT_VERSION_ARRAY[-1]}
+  - echo SEMVER_MAJOR:${SEMVER_MAJOR}
+  - echo SEMVER_MINOR:${SEMVER_MINOR}
+  - echo SEMVER_BUILD:${SEMVER_BUILD}
+  - export SEMVER=${SEMVER_MAJOR}.${SEMVER_MINOR}.${SEMVER_BUILD}
+  - echo SEMVER:$SEMVER
+  - if [[ ${SEMVER_MAJOR} == "" ]]; then travis_terminate 1; fi
+  - export TRAVIS_TAG=$SEMVER
+  - echo TRAVIS_TAG:$TRAVIS_TAG
 
-#build
+#build and test
 install:
-  - docker images
   - docker build --pull -t $IMAGE:$IMAGE_VERSION --build-arg ORACLE_USERNAME=${ORACLE_USERNAME} --build-arg ORACLE_PASSWORD=${ORACLE_PASSWORD} .
-  - docker tag $IMAGE:$IMAGE_VERSION $IMAGE:latest
+  - export CONTAINER_COMMAND="docker run $IMAGE:$IMAGE_VERSION $TEST_COMMAND"
+  - echo CONTAINER_COMMAND=$CONTAINER_COMMAND
   - export CONTAINER_OUTPUT=$(docker run $IMAGE:$IMAGE_VERSION java -version 2>&1 | grep "java version" | sed -e 's/.*java version "\(.*\)".*/\1/')
   - echo CONTAINER_OUTPUT=$CONTAINER_OUTPUT
   - docker tag $IMAGE:$IMAGE_VERSION $IMAGE:$CONTAINER_OUTPUT
+  - if [[ ! ${CONTAINER_OUTPUT} =~ ${TEST_COMMAND_VERIFY} ]]; then travis_terminate 1; fi
   - docker images
 
 #test
 script:
-  - if [[ ! ${CONTAINER_OUTPUT} =~ ${TEXT_EXPECTED} ]]; then travis_terminate 1; fi
   - echo "LOGIN TO HUB.DOCKER"
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - echo "PUSH HUB.DOCKER"
-  - docker push $IMAGE:$IMAGE_VERSION && docker push $IMAGE:$CONTAINER_OUTPUT && if [[ $TRAVIS_BRANCH == "master" ]]; then docker push $IMAGE:latest; fi
+  - docker push $IMAGE:$CONTAINER_OUTPUT
+  - if [[ $TRAVIS_BRANCH == "master" ]]; then docker tag $IMAGE:$IMAGE_VERSION $IMAGE:latest && docker push $IMAGE:latest; fi
   - echo "UPDATE README IN HUB.DOCKER"
   - if [[ $TRAVIS_BRANCH == "master" ]]; then docker run --rm -v $(pwd):/data/ aemdesign/dockerhub-description "$DOCKER_USERNAME" "$DOCKER_PASSWORD" "$IMAGE"; fi
 
 ## Get the project version
 before_deploy:
-  - export CURRENT_VERSION=$(git describe --tag --always --long | sed -e 's/\(.*\)-\(.*\)-.*/\1.\2/')
-  - echo CURRENT_VERSION=$CURRENT_VERSION
-  - export TRAVIS_TAG=$CURRENT_VERSION
   - if [[ $TRAVIS_BRANCH == "master" ]]; then git tag $TRAVIS_TAG; fi
 
 ## Create release in GitHub
 deploy:
   provider: releases
+  tag_name: $TRAVIS_TAG
+  name: $TRAVIS_TAG
+  target_commitish: $TRAVIS_COMMIT
   api_key: $GITHUB_TOKEN
   skip_cleanup: true
   on:
     branch: master
-  name: $CURRENT_VERSION
