@@ -1,8 +1,8 @@
-FROM        aemdesign/centos-tini:latest
+FROM        aemdesign/centos-tini:centos7
 
 MAINTAINER  devops <devops@aem.design>
 
-LABEL   os="centos" \
+LABEL   os="centos 7" \
         container.description="oracle jdk" \
         version="jdk8" \
         imagename="oracle-jdk" \
