@@ -1,4 +1,4 @@
-FROM        aemdesign/centos-tini:centos8
+FROM        aemdesign/centos-tini:centos7
 
 MAINTAINER  devops <devops@aem.design>
 
