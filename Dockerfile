@@ -17,7 +17,8 @@ ARG ORACLE_USERNAME="devops.aemdesign@gmail.com"
 
 COPY oracle-download.sh .
 
-RUN chmod +x oracle-download.sh && \
+RUN echo "==> Download Oracle JDK..." && \
+    chmod +x oracle-download.sh && \
     echo JAVA_DOWNLOAD_URL=$JAVA_DOWNLOAD_URL && \
     AUTO_JDKURLINFO=$(curl -LsN ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-${JAVA_VERSION}.*linux.*x64.*.rpm ) && \
     AUTO_JDKURL=$(echo ${AUTO_JDKURLINFO} | sed -e 's/.*"filepath":"\(http.*.rpm\)".*/\1/g' ) && \
@@ -31,4 +32,12 @@ RUN chmod +x oracle-download.sh && \
     echo "${AUTO_JDKMD5}  ${AUTO_JDKFILE}" >> MD5SUM && \
     md5sum -c MD5SUM && \
     rpm -Uvh $AUTO_JDKFILE && \
-    rm -f $AUTO_JDKFILE MD5SUM
+    rm -f $AUTO_JDKFILE MD5SUM && \
+    echo "==> Set Oracle JDK as Alternative..." && \
+    alternatives --install "/usr/bin/java" "java" "/usr/java/default/bin/java" 2 && \
+    alternatives --install "/usr/bin/jar" "jar" "/usr/java/default/bin/jar" 2 && \
+    alternatives --install "/usr/bin/javac" "javac" "/usr/java/default/bin/javac" 2 && \
+    alternatives --set java "/usr/java/default/bin/java" && \
+    alternatives --set jar "/usr/java/default/bin/jar" && \
+    alternatives --set javac "/usr/java/default/bin/javac"
+
