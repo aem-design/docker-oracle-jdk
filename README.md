@@ -1,6 +1,6 @@
 ## CentOS 7 with Oracle JDK
 
-[![build_status](https://travis-ci.org/aem-design/oracle-jdk.svg?branch=master)](https://travis-ci.org/aem-design/oracle-jdk)
+[![build_status](https://travis-ci.org/aem-design/docker-oracle-jdk.svg?branch=master)](https://travis-ci.org/aem-design/docker-oracle-jdk)
 [![github license](https://img.shields.io/github/license/aem-design/oracle-jdk)](https://github.com/aem-design/oracle-jdk) 
 [![github issues](https://img.shields.io/github/issues/aem-design/oracle-jdk)](https://github.com/aem-design/oracle-jdk) 
 [![github last commit](https://img.shields.io/github/last-commit/aem-design/oracle-jdk)](https://github.com/aem-design/oracle-jdk) 
