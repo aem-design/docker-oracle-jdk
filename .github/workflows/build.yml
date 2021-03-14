@@ -11,6 +11,7 @@ jobs:
       ORGANISATION_NAME: aemdesign
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ORACLE_PASSWORD: ${{ secrets.ORACLE_PASSWORD }}
 
     steps:
       - name: Experimental Status
@@ -35,7 +36,7 @@ jobs:
           source <(curl -sL https://github.com/aem-design/aemdesign-docker/releases/latest/download/github_get_version.sh)
       - name: build and test docker image
         run: |
-          docker build --pull --squash -t $IMAGE:$GIT_BRANCH .
+          docker build --build-arg ORACLE_PASSWORD=$ORACLE_PASSWORD --pull --squash -t $IMAGE:$GIT_BRANCH .
           docker tag $IMAGE:$GIT_BRANCH $IMAGE:$IMAGE_VERSION
           (cd test && bash ./run_tests.sh "$IMAGE:$GIT_BRANCH")
           docker images
