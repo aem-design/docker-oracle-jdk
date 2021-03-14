@@ -43,8 +43,8 @@ RUN \
     echo AUTO_JDKSHA256=$AUTO_JDKSHA256 && \
     echo "DOWNLOAD JDK" && \
     # download jdk
-    echo ./oracle-download.sh --cookie=accept-securebackup-cookie --output=${AUTO_JDKFILE} --password=${ORACLE_PASSWORD} --username=${ORACLE_USERNAME} ${AUTO_JDKURL} && \
-    bash ./oracle-download.sh --cookie=accept-securebackup-cookie --output=${AUTO_JDKFILE} --password=${ORACLE_PASSWORD} --username=${ORACLE_USERNAME} ${AUTO_JDKURL} && \
+    echo ./oracle-download.sh -C accept-securebackup-cookie -O ${AUTO_JDKFILE} -P ${ORACLE_PASSWORD} -U ${ORACLE_USERNAME} ${AUTO_JDKURL} && \
+    bash ./oracle-download.sh -C accept-securebackup-cookie -O ${AUTO_JDKFILE} -P ${ORACLE_PASSWORD} -U ${ORACLE_USERNAME} ${AUTO_JDKURL} && \
     ls -l && \
     # verify jdk signature
     echo "${AUTO_JDKSHA256} ${AUTO_JDKFILE}" >> CHECKSUM && \
