@@ -37,7 +37,6 @@ jobs:
       - name: build and test docker image
         run: |
           docker build --build-arg ORACLE_PASSWORD=$ORACLE_PASSWORD --pull --squash -t $IMAGE:$GIT_BRANCH .
-          docker tag $IMAGE:$GIT_BRANCH $IMAGE:$IMAGE_VERSION
           (cd test && bash ./run_tests.sh "$IMAGE:$GIT_BRANCH")
           docker images
       - name: login to docker registry
