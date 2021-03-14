@@ -99,11 +99,11 @@ test_docker_run_usage() {
 
   printLine "Starting Container"
 
-  OUTPUT=$(docker run --rm ${IMAGE_NAME}:${GIT_BRANCH} java --version)
+  OUTPUT=$(docker run --rm ${IMAGE_NAME} java --version)
 
   if [[ "$OUTPUT" != *"$CHECK"* ]]; then
       printResult "error"
-      printDebug "Image '${IMAGE_NAME}:${GIT_BRANCH}' test FAILED could not find ${CHECK} in output" "${OUTPUT}"
+      printDebug "Image '${IMAGE_NAME}' test FAILED could not find ${CHECK} in output" "${OUTPUT}"
       exit 1
     else
         printResult "success"
