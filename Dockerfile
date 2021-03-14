@@ -23,10 +23,10 @@ RUN \
     echo JAVA_DOWNLOAD_URL=$JAVA_DOWNLOAD_URL && \
     AUTO_PAGE=$(curl -LsN ${JAVA_DOWNLOAD_URL}) && \
     # get checksum url from download page
-    AUTO_CHECKSUM_URL=$(echo ${AUTO_PAGE} | sed -e 's/.*href="\(.*-checksum.html\)".*/\1/g') && \
+    AUTO_CHECKSUM_URL=https:$(echo ${AUTO_PAGE} | sed -e 's/.*href="\(.*-checksum.html\)".*/\1/g') && \
     echo AUTO_CHECKSUM_URL=${AUTO_CHECKSUM_URL} && \
     # get the checksum url
-    AUTO_PAGE_CHECKSUM=$(curl -LsN https:${AUTO_CHECKSUM_URL}) && \
+    AUTO_PAGE_CHECKSUM=$(curl -LsN ${AUTO_CHECKSUM_URL}) && \
     # find jdk reference in downlaod page
     AUTO_JDKURLINFO=$(curl -LsN ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-${JAVA_VERSION}.*linux.*x64.*.rpm ) && \
     echo AUTO_JDKURLINFO=${AUTO_JDKURLINFO} && \
@@ -43,8 +43,8 @@ RUN \
     echo AUTO_JDKSHA256=$AUTO_JDKSHA256 && \
     echo "DOWNLOAD JDK" && \
     # download jdk
-    echo ./oracle-download.sh --cookie=accept-securebackup-cookie --output=${AUTO_JDKFILE} --password=$(echo ${ORACLE_PASSWORD} | sed 's/./*/g') --username=${ORACLE_USERNAME} ${AUTO_JDKURL} && \
-    echo $(bash ./oracle-download.sh --cookie=accept-securebackup-cookie --output=${AUTO_JDKFILE} --password=${ORACLE_PASSWORD} --username=${ORACLE_USERNAME} ${AUTO_JDKURL}) && \
+    echo ./oracle-download.sh --cookie=accept-securebackup-cookie --output=${AUTO_JDKFILE} --password=${ORACLE_PASSWORD} --username=${ORACLE_USERNAME} ${AUTO_JDKURL} && \
+    bash ./oracle-download.sh --cookie=accept-securebackup-cookie --output=${AUTO_JDKFILE} --password=${ORACLE_PASSWORD} --username=${ORACLE_USERNAME} ${AUTO_JDKURL} && \
     ls -l && \
     # verify jdk signature
     echo "${AUTO_JDKSHA256} ${AUTO_JDKFILE}" >> CHECKSUM && \
