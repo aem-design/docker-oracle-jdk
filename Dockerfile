@@ -11,7 +11,7 @@ LABEL   os="centos 8" \
 
 ARG JAVA_VERSION="8"
 ARG JAVA_VERSION_TIMESTAMP="2133151"
-ARG JAVA_DOWNLOAD_URL="https://www.oracle.com/au/java/technologies/javase-jdk${JAVA_VERSION}-downloads.html"
+ARG JAVA_DOWNLOAD_URL="https://www.oracle.com/au/java/technologies/javase/javase-jdk8-downloads.html"
 ARG ORACLE_PASSWORD="xxx"
 ARG ORACLE_USERNAME="devops.aemdesign@gmail.com"
 
