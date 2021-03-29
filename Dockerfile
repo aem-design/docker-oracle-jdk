@@ -24,7 +24,7 @@ RUN \
     AUTO_PAGE=$(curl -LsN ${JAVA_DOWNLOAD_URL})
 RUN \
     # get checksum url from download page
-    AUTO_CHECKSUM_URL=https:$(echo ${AUTO_PAGE} | sed -e 's/.*href="\(.*-checksum.html\)".*/\1/g') && \
+    AUTO_CHECKSUM_URL=https:$(echo ${AUTO_PAGE} | sed -e 's/.*href="\(.*checksum.html\)".*/\1/g') && \
     echo AUTO_CHECKSUM_URL=${AUTO_CHECKSUM_URL}
 
 RUN \
