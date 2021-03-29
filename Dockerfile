@@ -21,35 +21,52 @@ RUN \
     echo "GET INFO ABOUT JDK" && \
     # get download page
     echo JAVA_DOWNLOAD_URL=$JAVA_DOWNLOAD_URL && \
-    AUTO_PAGE=$(curl -LsN ${JAVA_DOWNLOAD_URL}) && \
+    AUTO_PAGE=$(curl -LsN ${JAVA_DOWNLOAD_URL})
+RUN \
     # get checksum url from download page
     AUTO_CHECKSUM_URL=https:$(echo ${AUTO_PAGE} | sed -e 's/.*href="\(.*-checksum.html\)".*/\1/g') && \
-    echo AUTO_CHECKSUM_URL=${AUTO_CHECKSUM_URL} && \
+    echo AUTO_CHECKSUM_URL=${AUTO_CHECKSUM_URL}
+
+RUN \
     # get the checksum url
-    AUTO_PAGE_CHECKSUM=$(curl -LsN ${AUTO_CHECKSUM_URL}) && \
+    AUTO_PAGE_CHECKSUM=$(curl -LsN ${AUTO_CHECKSUM_URL})
+
+RUN \
     # find jdk reference in downlaod page
     AUTO_JDKURLINFO=$(curl -LsN ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-${JAVA_VERSION}.*linux.*x64.*.rpm ) && \
-    echo AUTO_JDKURLINFO=${AUTO_JDKURLINFO} && \
+    echo AUTO_JDKURLINFO=${AUTO_JDKURLINFO}
+
+RUN \
     # get jdk url
     AUTO_JDKURL=$(echo ${AUTO_JDKURLINFO} | sed -e "s/.*data-file='\(https.*.rpm\)'.*/\1/g" ) && \
-    echo AUTO_JDKURL=$AUTO_JDKURL && \
+    echo AUTO_JDKURL=$AUTO_JDKURL
+
+RUN \
     # get jdk filename
     AUTO_JDKFILE=$(echo ${AUTO_JDKURL} | sed 's/.*\///' ) && \
-    echo AUTO_JDKFILE=$AUTO_JDKFILE && \
+    echo AUTO_JDKFILE=$AUTO_JDKFILE
+
+RUN \
     # get checksum value
     AUTO_CHECKSUM_VALUE=$(echo "${AUTO_PAGE_CHECKSUM}" | grep -m1 ${AUTO_JDKFILE}) && \
     echo AUTO_CHECKSUM_VALUE=${AUTO_CHECKSUM_VALUE} && \
     AUTO_JDKSHA256=$(echo ${AUTO_CHECKSUM_VALUE} | sed -e 's/.*sha256: \([0-9a-z]*\).*/\1/g' )  && \
-    echo AUTO_JDKSHA256=$AUTO_JDKSHA256 && \
+    echo AUTO_JDKSHA256=$AUTO_JDKSHA256
+
+RUN \
     echo "DOWNLOAD JDK" && \
     # download jdk
     echo ./oracle-download.sh -C accept-securebackup-cookie -O ${AUTO_JDKFILE} -P ${ORACLE_PASSWORD} -U ${ORACLE_USERNAME} ${AUTO_JDKURL} && \
     bash ./oracle-download.sh -C accept-securebackup-cookie -O ${AUTO_JDKFILE} -P ${ORACLE_PASSWORD} -U ${ORACLE_USERNAME} ${AUTO_JDKURL} && \
-    ls -l && \
+    ls -l
+
+RUN \
     # verify jdk signature
     echo "${AUTO_JDKSHA256} ${AUTO_JDKFILE}" >> CHECKSUM && \
     cat CHECKSUM && \
-    sha256sum -c CHECKSUM && \
+    sha256sum -c CHECKSUM
+
+RUN \
     echo "INSTALL JDK" && \
     # install jdk
     rpm -Uvh $AUTO_JDKFILE && \
