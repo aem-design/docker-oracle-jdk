@@ -31,7 +31,7 @@ RUN \
     AUTO_JDKURLINFO=$(curl -LsN ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-${JAVA_VERSION}.*linux.*x64.*.rpm ) && \
     echo AUTO_JDKURLINFO=${AUTO_JDKURLINFO} && \
     # get jdk url
-    AUTO_JDKURL=$(echo ${AUTO_JDKURLINFO} | sed -e "s/.*data-file='\(https.*.rpm\)'.*/\1/g" ) && \
+    AUTO_JDKURL=$(echo ${AUTO_JDKURLINFO} | sed -e "s/.*data-file='\(//.*.rpm\)'.*/\1/g" ) && \
     echo AUTO_JDKURL=$AUTO_JDKURL && \
     # get jdk filename
     AUTO_JDKFILE=$(echo ${AUTO_JDKURL} | sed 's/.*\///' ) && \

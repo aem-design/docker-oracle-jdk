@@ -6,7 +6,7 @@
 # IMAGE_NAME specifies a name of the candidate image used for testing.
 # The image has to be available before this script is executed.
 #
-IMAGE_NAME=${1:-aemdesign/centos-java-buildpack}
+IMAGE_NAME=${1:-aemdesign/oracle-jdk}
 FLAG_DEBUG=${2:-true}
 IP=$(which ip)
 if [[ -z $IP ]]; then
@@ -93,8 +93,8 @@ printDebug() {
     debug "$(printf '*%.0s' {1..100})" "error"
 }
 
-test_usage_java() {
-  printLine "Testing java"
+test_docker_run_usage() {
+  printLine "Testing 'docker run' usage"
   CHECK="1.8"
 
   printLine "Starting Container"
@@ -110,43 +110,5 @@ test_usage_java() {
   fi
 }
 
-test_usage_node() {
-  printLine "Testing node"
-  CHECK="$(cat ../Dockerfile | grep -m1 NODE_VERSION | sed -e 's/.*NODE_VERSION="\(.*\)".*/\1/g')"
-  COMMAND="$(cat ../Dockerfile | grep -m1 test.command | sed -e 's/.*test.command="\(.*\)".*/\1/g')"
 
-  printLine "Starting Container"
-
-  OUTPUT=$(docker run --rm ${IMAGE_NAME} bash --login -c "${COMMAND}")
-
-  if [[ "$OUTPUT" != *"$CHECK"* ]]; then
-      printResult "error"
-      printDebug "Image '${IMAGE_NAME}' test FAILED could not find ${CHECK} in output" "${OUTPUT}"
-      exit 1
-    else
-        printResult "success"
-  fi
-}
-
-test_usage_maven() {
-  printLine "Testing maven"
-  CHECK="$(cat ../Dockerfile | grep -m1 MAVEN_VERSION | sed -e 's/.*MAVEN_VERSION="\(.*\)".*/\1/g')"
-
-  printLine "Starting Container"
-
-  OUTPUT=$(docker run --rm ${IMAGE_NAME} mvn -version)
-
-  if [[ "$OUTPUT" != *"$CHECK"* ]]; then
-      printResult "error"
-      printDebug "Image '${IMAGE_NAME}' test FAILED could not find ${CHECK} in output" "${OUTPUT}"
-      exit 1
-    else
-        printResult "success"
-  fi
-}
-
-test_usage_java
-
-test_usage_node
-
-test_usage_maven
+test_docker_run_usage
