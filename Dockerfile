@@ -23,7 +23,7 @@ RUN \
     echo JAVA_DOWNLOAD_URL=$JAVA_DOWNLOAD_URL && \
     AUTO_PAGE=$(curl -LsN ${JAVA_DOWNLOAD_URL}) && \
     # get checksum url from download page
-    AUTO_CHECKSUM_URL=https://www.oracle.com$(echo ${AUTO_PAGE} | grep "/${JAVA_VERSION}.*checksum.html" | sed -e 's/.*href="\(.*.html\)".*/\1/g') && \
+    AUTO_CHECKSUM_URL=https://www.oracle.com$(curl -LsN ${JAVA_DOWNLOAD_URL} | grep "/${JAVA_VERSION}.*checksum.html" | sed -e 's/.*href="\(.*.html\)".*/\1/g') && \
     echo AUTO_CHECKSUM_URL=${AUTO_CHECKSUM_URL} && \
     # get the checksum url
     AUTO_PAGE_CHECKSUM=$(curl -LsN ${AUTO_CHECKSUM_URL}) && \
