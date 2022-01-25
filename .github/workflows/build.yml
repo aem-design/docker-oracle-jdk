@@ -53,7 +53,7 @@ jobs:
           load: true
           tags: ${{ env.IMAGE }}:${{ env.GIT_BRANCH }}
           secrets: |
-            "github_token=${{ secrets.GITHUB_TOKEN }}"
+            "ORACLE_PASSWORD=${{ secrets.ORACLE_PASSWORD }}"
 
       - name: test docker image
         run: |
@@ -66,7 +66,9 @@ jobs:
           platforms: linux/arm64
           push: true
           tags: ${{ env.IMAGE }}:${{ env.GIT_BRANCH }}
-
+          secrets: |
+            "ORACLE_PASSWORD=${{ secrets.ORACLE_PASSWORD }}"
+            
       - name: update registry description with readme on master
         if: github.ref == 'refs/heads/master'
         run: |
