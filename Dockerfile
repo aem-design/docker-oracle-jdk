@@ -31,13 +31,13 @@ RUN \
     AUTO_JDKURLINFO=$(curl -LsN ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-${JAVA_VERSION}.*linux.*aarch64.*.rpm ) && \
     echo AUTO_JDKURLINFO=${AUTO_JDKURLINFO} && \
     # get jdk url
-    AUTO_JDKURL=https:$(echo ${AUTO_JDKURLINFO} | sed -e "s/.*data-file='\(\/\/.*.rpm\)'.*/\1/g" ) && \
+    AUTO_JDKURL=https:$(echo ${AUTO_JDKURLINFO} | sed -e "s/.*data-file='\(.*.rpm\)'.*/\1/g" ) && \
     echo AUTO_JDKURL=$AUTO_JDKURL && \
     # get jdk filename
     AUTO_JDKFILE=$(echo ${AUTO_JDKURL} | sed 's/.*\///' ) && \
     echo AUTO_JDKFILE=$AUTO_JDKFILE && \
     # get checksum value
-    AUTO_CHECKSUM_VALUE=$(echo "${AUTO_PAGE_CHECKSUM}" | grep -m1 ${AUTO_JDKFILE}) && \
+    AUTO_CHECKSUM_VALUE=$(curl -LsN ${AUTO_CHECKSUM_URL} | grep -m1 ${AUTO_JDKFILE}) && \
     echo AUTO_CHECKSUM_VALUE=${AUTO_CHECKSUM_VALUE} && \
     AUTO_JDKSHA256=$(echo ${AUTO_CHECKSUM_VALUE} | sed -e 's/.*sha256: \([0-9a-z]*\).*/\1/g' )  && \
     echo AUTO_JDKSHA256=$AUTO_JDKSHA256 && \
