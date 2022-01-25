@@ -1,6 +1,6 @@
-FROM        aemdesign/centos-tini:centos8
+FROM        aemdesign/centos-tini:centos8-arm
 
-LABEL   os="centos 8" \
+LABEL   os="centos 8 arm" \
         container.description="oracle jdk" \
         version="jdk8" \
         maintainer="devops <devops@aem.design>" \
@@ -28,7 +28,7 @@ RUN \
     # get the checksum url
     AUTO_PAGE_CHECKSUM=$(curl -LsN ${AUTO_CHECKSUM_URL}) && \
     # find jdk reference in downlaod page
-    AUTO_JDKURLINFO=$(curl -LsN ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-${JAVA_VERSION}.*linux.*x64.*.rpm ) && \
+    AUTO_JDKURLINFO=$(curl -LsN ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-${JAVA_VERSION}.*linux.*aarch64.*.rpm ) && \
     echo AUTO_JDKURLINFO=${AUTO_JDKURLINFO} && \
     # get jdk url
     AUTO_JDKURL=https:$(echo ${AUTO_JDKURLINFO} | sed -e "s/.*data-file='\(\/\/.*.rpm\)'.*/\1/g" ) && \
