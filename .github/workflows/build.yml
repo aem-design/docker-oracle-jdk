@@ -66,7 +66,7 @@ jobs:
           platforms: linux/arm64
           push: true
           build-args: |
-            "ORACLE_PASSWORD=${{ secrets.ORACLE_PASSWORD }}"
+            "JDK_DRIVEID=${{ secrets.JDK_DRIVEID }}"
           tags: |
             ${{ env.IMAGE }}:${{ env.GIT_BRANCH }}
             ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.GIT_BRANCH }}
