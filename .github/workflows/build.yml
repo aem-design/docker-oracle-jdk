@@ -14,7 +14,7 @@ jobs:
       ORGANISATION_NAME: aemdesign
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      ORACLE_PASSWORD: ${{ secrets.ORACLE_PASSWORD }}
+      JDK_DRIVEID: ${{ secrets.JDK_DRIVEID }}
 
     steps:
 
@@ -49,7 +49,7 @@ jobs:
           platforms: linux/arm64
           load: true
           build-args: |
-            "ORACLE_PASSWORD=${{ secrets.ORACLE_PASSWORD }}"
+            "JDK_DRIVEID=${{ secrets.JDK_DRIVEID }}"
           tags: |
             ${{ env.IMAGE }}:${{ env.GIT_BRANCH }}
             ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.GIT_BRANCH }}
