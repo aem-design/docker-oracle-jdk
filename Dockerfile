@@ -1,6 +1,6 @@
 FROM        aemdesign/tini:ubuntu-focal-arm
 
-LABEL   os="centos 8 arm" \
+LABEL   os="ubuntu 8 arm" \
         container.description="oracle jdk" \
         version="jdk8" \
         maintainer="devops <devops@aem.design>" \
