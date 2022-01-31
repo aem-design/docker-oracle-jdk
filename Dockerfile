@@ -1,4 +1,4 @@
-FROM        aemdesign/centos-tini:centos8-arm
+FROM        aemdesign/tini:ubuntu-focal-arm
 
 LABEL   os="centos 8 arm" \
         container.description="oracle jdk" \
