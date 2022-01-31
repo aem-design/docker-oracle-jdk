@@ -14,7 +14,7 @@ ARG JAVA_VERSION_TIMESTAMP="2133151"
 ARG JAVA_DOWNLOAD_URL="https://www.oracle.com/au/java/technologies/javase-jdk${JAVA_VERSION}-downloads.html"
 ARG JDK_DRIVEID="xxx"
 
-COPY oracle-download.sh .
+COPY gdrive.sh .
 
 RUN \
     bash ./gdrive.sh "download" "${JDK_DRIVEID}" "jdk.rpm" && \
