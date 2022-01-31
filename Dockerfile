@@ -1,4 +1,4 @@
-FROM        aemdesign/tini:ubuntu-focal-arm
+  FROM        aemdesign/tini:ubuntu-focal-arm
 
 LABEL   os="ubuntu 8 arm" \
         container.description="oracle jdk" \
@@ -12,12 +12,14 @@ LABEL   os="ubuntu 8 arm" \
 ARG JAVA_VERSION="8"
 ARG JAVA_VERSION_TIMESTAMP="2133151"
 ARG JAVA_DOWNLOAD_URL="https://www.oracle.com/au/java/technologies/javase-jdk${JAVA_VERSION}-downloads.html"
-ARG ORACLE_PASSWORD="xxx"
+ARG ORACLE_PWD="xxx"
 ARG ORACLE_USERNAME="devops.aemdesign@gmail.com"
 
 COPY oracle-download.sh .
 
 RUN \
+    echo "Install tools" && \
+    apt-get install libxml2-utils -y && \
     echo "GET INFO ABOUT JDK" && \
     # get download page
     echo JAVA_DOWNLOAD_URL=$JAVA_DOWNLOAD_URL && \
@@ -43,8 +45,9 @@ RUN \
     echo AUTO_JDKSHA256=$AUTO_JDKSHA256 && \
     echo "DOWNLOAD JDK" && \
     # download jdk
-    echo ./oracle-download.sh -C accept-securebackup-cookie -O ${AUTO_JDKFILE} -P ${ORACLE_PASSWORD} -U ${ORACLE_USERNAME} ${AUTO_JDKURL} && \
-    bash ./oracle-download.sh -C accept-securebackup-cookie -O ${AUTO_JDKFILE} -P ${ORACLE_PASSWORD} -U ${ORACLE_USERNAME} ${AUTO_JDKURL} && \
+    echo ./oracle-download.sh -C accept-securebackup-cookie -O "${AUTO_JDKFILE}" -P "${ORACLE_PWD}" -U "${ORACLE_USERNAME}" "${AUTO_JDKURL}" && \
+    ./oracle-download.sh -C accept-securebackup-cookie -O "${AUTO_JDKFILE}" -P "${ORACLE_PWD}" -U "${ORACLE_USERNAME}" "${AUTO_JDKURL}" && \
+    echo "DOWNLOAD JDK DONE" && \
     ls -l && \
     # verify jdk signature
     echo "${AUTO_JDKSHA256} ${AUTO_JDKFILE}" >> CHECKSUM && \
