@@ -14,12 +14,18 @@ ARG JAVA_VERSION_TIMESTAMP="2133151"
 ARG JAVA_DOWNLOAD_URL="https://www.oracle.com/au/java/technologies/javase-jdk${JAVA_VERSION}-downloads.html"
 ARG JDK_DRIVEID="xxx"
 
+ENV JAVA_HOME=/opt/jdk1.8.0_321/
+
 COPY gdrive.sh .
 
 RUN \
-    bash ./gdrive.sh "download" "${JDK_DRIVEID}" "jdk.rpm" && \
     echo "DOWNLOAD JDK DONE" && \
-    ls -l && \
+    bash ./gdrive.sh "download" "${JDK_DRIVEID}" "/opt/jdk.tar.gz" && \
     echo "INSTALL JDK" && \
-    # install jdk
-    rpm -Uvh jdk.rpm
+    cd /opt/ && \
+    tar -xvzf jdk.tar.gz && \
+    export JAVA_HOME=${JAVA_HOME}  && \
+    update-alternatives --install /usr/bin/java java ${JAVA_HOME%*/}/bin/java 1 && \
+    update-alternatives --install /usr/bin/javac javac ${JAVA_HOME%*/}/bin/javac 1 && \
+    update-alternatives --config java && \
+    rm -rf /opt/jdk.tar.gz
