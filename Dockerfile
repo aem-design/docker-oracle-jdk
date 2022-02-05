@@ -1,4 +1,4 @@
-  FROM        aemdesign/tini:ubuntu-focal-arm
+  FROM        aemdesign/tini:debain-arm
 
 LABEL   os="ubuntu 8 arm" \
         container.description="oracle jdk" \
