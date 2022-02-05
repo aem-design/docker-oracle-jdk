@@ -14,7 +14,7 @@ jobs:
       ORGANISATION_NAME: aemdesign
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      JDK_DRIVEID: ${{ secrets.JDK11_DRIVEID }}
+      JDK_DRIVEID: ${{ secrets.JDK11_DRIVEID_ARM }}
 
     steps:
 

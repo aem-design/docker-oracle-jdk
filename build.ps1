@@ -2,7 +2,7 @@ Param(
   [string]$LOG_PATH = "${PWD}\logs",
   [string]$LOG_PEFIX = "docker",
   [string]$LOG_SUFFIX = ".log",
-  [string]$TAG = "jdk11",
+  [string]$TAG = "jdk11-arm",
   [string]$FILE = "Dockerfile",
   [string]$FUNCTIONS_URI = "https://github.com/aem-design/aemdesign-docker/releases/latest/download/functions.ps1",
   [string]$COMMAND = "docker buildx build --platform linux/arm64 --build-arg JDK_DRIVEID=$env:JDK_DRIVEID . -f .\${FILE} -t ${TAG}"

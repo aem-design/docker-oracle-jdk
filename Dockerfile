@@ -1,6 +1,6 @@
-  FROM        aemdesign/tini:debian
+  FROM        aemdesign/tini:debian-arm
 
-LABEL   os="debian 8" \
+LABEL   os="debian 8 arm" \
         container.description="oracle jdk" \
         version="jdk11" \
         maintainer="devops <devops@aem.design>" \
