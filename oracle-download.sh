@@ -131,6 +131,14 @@ down() {
         OUTPUT_FILE=${URL##*/}
     fi
 
+    echo    curl -L -o ${OUTPUT_FILE} -b ${COOKIES_FILE} -c ${COOKIES_FILE} 'https://login.oracle.com/oam/server/sso/auth_cred_submit' \
+        -H "Cookie: s_cc=true; oraclelicense=${COOKIE_ACCEPT_LICENSE};" \
+        -H "User-Agent: ${USER_AGENT}" \
+        --data-urlencode "ssousername=${ORCL_USER}" \
+        --data-urlencode "password=${ORCL_PWD}" \
+        -d "${data_string}" \
+        --compressed
+
     # download file
     curl -L -o ${OUTPUT_FILE} -b ${COOKIES_FILE} -c ${COOKIES_FILE} 'https://login.oracle.com/oam/server/sso/auth_cred_submit' \
         -H "Cookie: s_cc=true; oraclelicense=${COOKIE_ACCEPT_LICENSE};" \

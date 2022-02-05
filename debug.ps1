@@ -18,4 +18,4 @@ printSectionLine "$COMMAND" "warn"
 
 $IMAGENAME=Select-String -path $FILE '.*imagename="(.*)".*' -AllMatches | Foreach-Object {$_.Matches} | Foreach-Object {$_.Groups[1].Value}
 
-docker run -it --rm -v ${PWD}:/build/source:rw aemdesign/centos-java-buildpack bash --login
+docker run -it --rm -v ${PWD}:/build/source:rw aemdesign/java-buildpack bash --login
