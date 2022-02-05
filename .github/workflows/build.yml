@@ -57,7 +57,7 @@ jobs:
 
       - name: test docker image
         run: |
-          cd test && bash ./run_tests.sh "$IMAGE:$GIT_BRANCH"
+          cd test && bash ./run_tests.sh "ghcr.io/$GITHUB_REPOSITORY_OWNER/$IMAGE:$GIT_BRANCH"
 
       - name: Build and push
         uses: docker/build-push-action@v2
