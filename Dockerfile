@@ -1,6 +1,6 @@
-FROM        aemdesign/centos-tini:centos8
+  FROM        aemdesign/tini:debian-arm
 
-LABEL   os="centos 8" \
+LABEL   os="debian 8" \
         container.description="oracle jdk" \
         version="jdk8" \
         maintainer="devops <devops@aem.design>" \
@@ -12,45 +12,20 @@ LABEL   os="centos 8" \
 ARG JAVA_VERSION="8"
 ARG JAVA_VERSION_TIMESTAMP="2133151"
 ARG JAVA_DOWNLOAD_URL="https://www.oracle.com/au/java/technologies/javase-jdk${JAVA_VERSION}-downloads.html"
-ARG ORACLE_PASSWORD="xxx"
-ARG ORACLE_USERNAME="devops.aemdesign@gmail.com"
+ARG JDK_DRIVEID="xxx"
 
-COPY oracle-download.sh .
+ENV JAVA_HOME=/opt/jdk1.8.0_321/
+
+COPY gdrive.sh .
 
 RUN \
-    echo "GET INFO ABOUT JDK" && \
-    # get download page
-    echo JAVA_DOWNLOAD_URL=$JAVA_DOWNLOAD_URL && \
-    AUTO_PAGE=$(curl -LsN ${JAVA_DOWNLOAD_URL}) && \
-    # get checksum url from download page
-    AUTO_CHECKSUM_URL=https:$(echo ${AUTO_PAGE} | sed -e 's/.*href="\(.*checksum.html\)".*/\1/g') && \
-    echo AUTO_CHECKSUM_URL=${AUTO_CHECKSUM_URL} && \
-    # get the checksum url
-    AUTO_PAGE_CHECKSUM=$(curl -LsN ${AUTO_CHECKSUM_URL}) && \
-    # find jdk reference in downlaod page
-    AUTO_JDKURLINFO=$(curl -LsN ${JAVA_DOWNLOAD_URL} | grep -m1 jdk\-${JAVA_VERSION}.*linux.*x64.*.rpm ) && \
-    echo AUTO_JDKURLINFO=${AUTO_JDKURLINFO} && \
-    # get jdk url
-    AUTO_JDKURL=https:$(echo ${AUTO_JDKURLINFO} | sed -e "s/.*data-file='\(\/\/.*.rpm\)'.*/\1/g" ) && \
-    echo AUTO_JDKURL=$AUTO_JDKURL && \
-    # get jdk filename
-    AUTO_JDKFILE=$(echo ${AUTO_JDKURL} | sed 's/.*\///' ) && \
-    echo AUTO_JDKFILE=$AUTO_JDKFILE && \
-    # get checksum value
-    AUTO_CHECKSUM_VALUE=$(echo "${AUTO_PAGE_CHECKSUM}" | grep -m1 ${AUTO_JDKFILE}) && \
-    echo AUTO_CHECKSUM_VALUE=${AUTO_CHECKSUM_VALUE} && \
-    AUTO_JDKSHA256=$(echo ${AUTO_CHECKSUM_VALUE} | sed -e 's/.*sha256: \([0-9a-z]*\).*/\1/g' )  && \
-    echo AUTO_JDKSHA256=$AUTO_JDKSHA256 && \
-    echo "DOWNLOAD JDK" && \
-    # download jdk
-    echo ./oracle-download.sh -C accept-securebackup-cookie -O ${AUTO_JDKFILE} -P ${ORACLE_PASSWORD} -U ${ORACLE_USERNAME} ${AUTO_JDKURL} && \
-    bash ./oracle-download.sh -C accept-securebackup-cookie -O ${AUTO_JDKFILE} -P ${ORACLE_PASSWORD} -U ${ORACLE_USERNAME} ${AUTO_JDKURL} && \
-    ls -l && \
-    # verify jdk signature
-    echo "${AUTO_JDKSHA256} ${AUTO_JDKFILE}" >> CHECKSUM && \
-    cat CHECKSUM && \
-    sha256sum -c CHECKSUM && \
+    echo "DOWNLOAD JDK DONE" && \
+    bash ./gdrive.sh "download" "${JDK_DRIVEID}" "/opt/jdk.tar.gz" && \
     echo "INSTALL JDK" && \
-    # install jdk
-    rpm -Uvh $AUTO_JDKFILE && \
-    rm -f $AUTO_JDKFILE CHECKSUM
+    cd /opt/ && \
+    tar -xvzf jdk.tar.gz && \
+    export JAVA_HOME=${JAVA_HOME}  && \
+    update-alternatives --install /usr/bin/java java ${JAVA_HOME%*/}/bin/java 1 && \
+    update-alternatives --install /usr/bin/javac javac ${JAVA_HOME%*/}/bin/javac 1 && \
+    update-alternatives --config java && \
+    rm -rf /opt/jdk.tar.gz
