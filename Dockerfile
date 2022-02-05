@@ -9,9 +9,6 @@ LABEL   os="debian 8" \
         test.command.verify="1.8"
 
 
-ARG JAVA_VERSION="8"
-ARG JAVA_VERSION_TIMESTAMP="2133151"
-ARG JAVA_DOWNLOAD_URL="https://www.oracle.com/au/java/technologies/javase-jdk${JAVA_VERSION}-downloads.html"
 ARG JDK_DRIVEID="xxx"
 
 ENV JAVA_HOME=/opt/jdk1.8.0_321/
