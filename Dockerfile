@@ -5,7 +5,7 @@ LABEL   os="debian 8" \
         version="jdk11" \
         maintainer="devops <devops@aem.design>" \
         imagename="oracle-jdk" \
-        test.command=" java -version 2>&1 | grep 'java version' | sed -e 's/.*java version "\(.*\)".*/\1/'" \
+        test.command=" java --version" \
         test.command.verify="11."
 
 

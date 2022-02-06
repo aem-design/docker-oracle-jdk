@@ -93,13 +93,15 @@ printDebug() {
     debug "$(printf '*%.0s' {1..100})" "error"
 }
 
-test_docker_run_usage() {
-  printLine "Testing 'docker run' usage"
-  CHECK="11"
+
+test_usage_java() {
+  printLine "Testing java"
+  CHECK="$(cat ../Dockerfile | grep -m1 test.command.verify | sed -e 's/.*test.command.verify="\(.*\)".*/\1/g')"
+  CHECK_COMMAND="$(cat ../Dockerfile | grep -m1 test.command | sed -e 's/.*test.command="\(.*\)".*/\1/g')"
 
   printLine "Starting Container"
 
-  OUTPUT=$(docker run --rm ${IMAGE_NAME} java --version)
+  OUTPUT=$(docker run --rm ${IMAGE_NAME} bash -c "${CHECK_COMMAND}")
 
   if [[ "$OUTPUT" != *"$CHECK"* ]]; then
       printResult "error"
@@ -110,5 +112,24 @@ test_docker_run_usage() {
   fi
 }
 
+test_docker_run_contains_packages() {
+    printLine "Testing if image has packages"
+    CHECK="${PACKAGE_CKECK_COUNT}"
 
-test_docker_run_usage
+    printLine "Starting Container"
+
+    OUTPUT=$(docker run --rm ${IMAGE_NAME} bash -c "cd /aem/crx-quickstart/install && ls -l *.zip | wc -l")
+
+    if [[ "$OUTPUT" != *"$CHECK"* ]]; then
+        printResult "error"
+        printDebug "Image '${IMAGE_NAME}' test FAILED could not find ${CHECK} in output" "${OUTPUT}"
+        exit 1
+    else
+        printResult "success"
+    fi
+}
+
+
+test_usage_java
+
+test_docker_run_contains_packages
