@@ -113,4 +113,4 @@ test_usage_java() {
 }
 
 
-test_docker_run_usage
+test_usage_java
