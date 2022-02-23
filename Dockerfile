@@ -1,6 +1,6 @@
-  FROM        aemdesign/tini:debian
+FROM        aemdesign/tini:ubuntu-focal
 
-LABEL   os="debian 8" \
+LABEL   os="ubuntu focal" \
         container.description="oracle jdk" \
         version="jdk8" \
         maintainer="devops <devops@aem.design>" \
