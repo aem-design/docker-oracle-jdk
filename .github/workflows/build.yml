@@ -14,7 +14,9 @@ jobs:
       ORGANISATION_NAME: aemdesign
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
       JDK_DRIVEID: ${{ secrets.JDK_DRIVEID }}
+
 
     steps:
 
@@ -42,6 +44,14 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Download Files from Google Drive
+        uses: docker://gvfn/gdrive
+        with:
+          entrypoint: "/bin/sh"
+          args: |
+            -c "\
+            gdrive --config /gdrive --service-account-evar SERVICE_ACCOUNT_JSON download --path /github/workspace/packages/ ${JDK_DRIVEID}
+
       - name: Build and export to Docker
         uses: docker/build-push-action@v2
         with:
@@ -49,7 +59,7 @@ jobs:
           platforms: linux/amd64
           load: true
           build-args: |
-            "JDK_DRIVEID=${{ env.JDK_DRIVEID }}"
+            "FILE_NAME=jdk-8u321-linux-x64.tar.gz"
           tags: |
             ${{ env.IMAGE }}:${{ env.GIT_BRANCH }}
             ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.GIT_BRANCH }}

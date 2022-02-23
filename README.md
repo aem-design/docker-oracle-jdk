@@ -1,6 +1,6 @@
 ## Oracle JDK
 
-[![build](https://github.com/aem-design/docker-oracle-jdk/actions/workflows/build.yml/badge.svg?branch=jdk8)](https://github.com/aem-design/docker-oracle-jdk/actions/workflows/build.yml)[![github license](https://img.shields.io/github/license/aem-design/oracle-jdk)](https://github.com/aem-design/oracle-jdk)
+[![build](https://github.com/aem-design/docker-oracle-jdk/actions/workflows/build.yml/badge.svg?branch=jdk8-ubuntu)](https://github.com/aem-design/docker-oracle-jdk/actions/workflows/build.yml)[![github license](https://img.shields.io/github/license/aem-design/oracle-jdk)](https://github.com/aem-design/oracle-jdk)
 [![github issues](https://img.shields.io/github/issues/aem-design/oracle-jdk)](https://github.com/aem-design/oracle-jdk)
 [![github last commit](https://img.shields.io/github/last-commit/aem-design/oracle-jdk)](https://github.com/aem-design/oracle-jdk)
 [![github repo size](https://img.shields.io/github/repo-size/aem-design/oracle-jdk)](https://github.com/aem-design/oracle-jdk)
