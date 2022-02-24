@@ -59,7 +59,7 @@ jobs:
           platforms: linux/amd64
           load: true
           build-args: |
-            "FILE_NAME=jdk-8u321-linux-x64.tar.gz"
+            "FILE_NAME=jdk-11.0.14_linux-x64_bin.tar.gz"
           tags: |
             ${{ env.IMAGE }}:${{ env.GIT_BRANCH }}
             ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.GIT_BRANCH }}

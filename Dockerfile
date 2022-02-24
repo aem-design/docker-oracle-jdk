@@ -8,7 +8,7 @@ LABEL   os="ubuntu focal" \
         test.command=" java --version" \
         test.command.verify="11."
 
-ARG FILE_NAME="jdk-8u321-linux-x64.tar.gz"
+ARG FILE_NAME="jdk-11.0.14_linux-x64_bin.tar.gz"
 
 ENV JAVA_HOME=/opt/jdk1.8.0_321/
 
