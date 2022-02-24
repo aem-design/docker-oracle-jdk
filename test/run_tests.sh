@@ -112,24 +112,5 @@ test_usage_java() {
   fi
 }
 
-test_docker_run_contains_packages() {
-    printLine "Testing if image has packages"
-    CHECK="${PACKAGE_CKECK_COUNT}"
-
-    printLine "Starting Container"
-
-    OUTPUT=$(docker run --rm ${IMAGE_NAME} bash -c "cd /aem/crx-quickstart/install && ls -l *.zip | wc -l")
-
-    if [[ "$OUTPUT" != *"$CHECK"* ]]; then
-        printResult "error"
-        printDebug "Image '${IMAGE_NAME}' test FAILED could not find ${CHECK} in output" "${OUTPUT}"
-        exit 1
-    else
-        printResult "success"
-    fi
-}
-
 
 test_usage_java
-
-test_docker_run_contains_packages

@@ -1,6 +1,6 @@
-  FROM        aemdesign/tini:debian
+FROM        aemdesign/tini:ubuntu-focal
 
-LABEL   os="debian 8" \
+LABEL   os="ubuntu focal" \
         container.description="oracle jdk" \
         version="jdk11" \
         maintainer="devops <devops@aem.design>" \
@@ -8,21 +8,18 @@ LABEL   os="debian 8" \
         test.command=" java --version" \
         test.command.verify="11."
 
+ARG FILE_NAME="jdk-8u321-linux-x64.tar.gz"
 
-ARG JDK_DRIVEID="xxx"
+ENV JAVA_HOME=/opt/jdk1.8.0_321/
 
-ENV JAVA_HOME=/opt/jdk-11.0.14/
-
-COPY gdrive.sh .
+COPY packages/ /opt
 
 RUN \
-    echo "DOWNLOAD JDK DONE" && \
-    bash ./gdrive.sh "download" "${JDK_DRIVEID}" "/opt/jdk.tar.gz" && \
     echo "INSTALL JDK" && \
     cd /opt/ && \
-    tar -xvzf jdk.tar.gz && \
+    tar -xvzf ${FILE_NAME} && \
     export JAVA_HOME=${JAVA_HOME}  && \
     update-alternatives --install /usr/bin/java java ${JAVA_HOME%*/}/bin/java 1 && \
     update-alternatives --install /usr/bin/javac javac ${JAVA_HOME%*/}/bin/javac 1 && \
     update-alternatives --config java && \
-    rm -rf /opt/jdk.tar.gz
+    rm -rf /opt/${FILE_NAME}
