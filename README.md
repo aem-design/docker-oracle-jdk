@@ -1,4 +1,4 @@
-## CentOS 7 with Oracle JDK
+## Oracle JDK
 
 [![build](https://github.com/aem-design/docker-oracle-jdk/actions/workflows/build.yml/badge.svg?branch=jdk11-ubuntu)](https://github.com/aem-design/docker-oracle-jdk/actions/workflows/build.yml)[![github license](https://img.shields.io/github/license/aem-design/oracle-jdk)](https://github.com/aem-design/oracle-jdk)
 [![github issues](https://img.shields.io/github/issues/aem-design/oracle-jdk)](https://github.com/aem-design/oracle-jdk)
