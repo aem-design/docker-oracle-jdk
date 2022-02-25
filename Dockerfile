@@ -10,9 +10,9 @@ LABEL   os="ubuntu focal" \
 
 ARG FILE_NAME="jdk-11.0.14_linux-x64_bin.tar.gz"
 
-ENV JAVA_HOME=/opt/jdk-11.0.14/
+ENV JAVA_HOME="/opt/jdk-11.0.14/"
 
-COPY packages/ /opt
+COPY packages/${FILE_NAME} /opt/${FILE_NAME}
 
 RUN \
     echo "INSTALL JDK" && \
