@@ -29,9 +29,21 @@ jobs:
       contents: read # for actions/checkout to fetch code
       security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
     runs-on: ubuntu-latest
+    env:
+      SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+      JDK_DRIVEID: ${{ secrets.JDK11_DRIVEID }}
     steps:
     - name: Checkout the code
       uses: actions/checkout@v2
+
+    - name: Download Files from Google Drive
+      uses: docker://gvfn/gdrive
+      with:
+        entrypoint: "/bin/sh"
+        args: |
+          -c "\
+          gdrive --config /gdrive --service-account-evar SERVICE_ACCOUNT_JSON download --path /github/workspace/packages/ ${JDK_DRIVEID}
+
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag localbuild/testimage:latest
     - name: Run the Anchore scan action itself with GitHub Advanced Security code scanning integration enabled
