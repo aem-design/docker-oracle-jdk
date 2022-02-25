@@ -12,12 +12,10 @@ ARG FILE_NAME="jdk-8u321-linux-x64.tar.gz"
 
 ENV JAVA_HOME=/opt/jdk1.8.0_321/
 
-COPY packages/ /opt
+ADD packages/${FILE_NAME} /opt/
 
 RUN \
-    echo "INSTALL JDK" && \
-    cd /opt/ && \
-    tar -xvzf ${FILE_NAME} && \
+    echo "CONFIG JDK" && \
     export JAVA_HOME=${JAVA_HOME}  && \
     update-alternatives --install /usr/bin/java java ${JAVA_HOME%*/}/bin/java 1 && \
     update-alternatives --install /usr/bin/javac javac ${JAVA_HOME%*/}/bin/javac 1 && \
