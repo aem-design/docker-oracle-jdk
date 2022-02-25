@@ -69,6 +69,14 @@ jobs:
         run: |
           cd test && bash ./run_tests.sh "ghcr.io/$GITHUB_REPOSITORY_OWNER/$IMAGE:$GIT_BRANCH"
 
+      - name: Run docker image analysis
+        uses: yuichielectric/dive-action@0.0.4
+        with:
+          image: ${{ env.IMAGE }}:${{ env.GIT_BRANCH }}
+          config-file: ${{ github.workspace }}/.dive-ci.yml
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
