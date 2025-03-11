@@ -5,8 +5,13 @@ Param(
   [string]$TAG = "jdk17",
   [string]$FILE = "Dockerfile",
   [string]$FUNCTIONS_URI = "https://github.com/aem-design/aemdesign-docker/releases/latest/download/functions.ps1",
-  [string]$COMMAND = "docker build . -f .\${FILE} -t ${TAG}"
+  [string]$COMMAND = "docker build . -f .\${FILE} -t "
 )
+
+$IMAGENAME=Select-String -path $FILE '.*imagename="(.*)".*' -AllMatches | Foreach-Object {$_.Matches} | Foreach-Object {$_.Groups[1].Value}
+$IMAGEVERSION=Select-String -path $FILE '.*version="(.*)".*' -AllMatches | Foreach-Object {$_.Matches} | Foreach-Object {$_.Groups[1].Value}
+
+$COMMAND="$COMMAND${IMAGENAME}:${IMAGEVERSION}"
 
 $SKIP_CONFIG = $true
 $PARENT_PROJECT_PATH = "."
@@ -16,6 +21,9 @@ $PARENT_PROJECT_PATH = "."
 printSectionBanner "Loading Debug Image"
 printSectionLine "$COMMAND" "warn"
 
-$IMAGENAME=Select-String -path $FILE '.*imagename="(.*)".*' -AllMatches | Foreach-Object {$_.Matches} | Foreach-Object {$_.Groups[1].Value}
+# Run $COMMAND and capture output to log file
+Invoke-Expression -Command "$COMMAND" | Tee-Object -Append -FilePath "${LOG_FILE}"
 
-docker run -it --rm -v ${PWD}:/build/source:rw aemdesign/java-buildpack bash --login
+
+docker run -it --rm -v ${PWD}:/build/source:rw ${IMAGENAME}:${IMAGEVERSION} bash --login
+# docker run -it --rm -v ${PWD}:/build/source:rw aemdesign/${IMAGENAME}:${IMAGEVERSION} bash --login
