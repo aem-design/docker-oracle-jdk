@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
-      JDK_DRIVEID: ${{ secrets.JDK11_DRIVEID }}
+      JDK_DRIVEID: ${{ secrets.JDK17_ORACLE_DRIVEID }}
     steps:
     - name: Checkout the code
       uses: actions/checkout@v2
