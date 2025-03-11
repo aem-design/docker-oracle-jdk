@@ -71,7 +71,7 @@ jobs:
           cd test && bash ./run_tests.sh "ghcr.io/$GITHUB_REPOSITORY_OWNER/$IMAGE:$GIT_BRANCH"
 
       - name: Run docker image analysis
-        uses: yuichielectric/dive-action@0.0.4
+        uses: MaxymVlasov/dive-action@v1.4.0
         with:
           image:  ${{ steps.docker_build.outputs.imageid }}
           config-file: ${{ env.GITHUB_WORKSPACE }}/.dive-ci.yml
