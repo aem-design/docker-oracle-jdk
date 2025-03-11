@@ -2,15 +2,15 @@ FROM        aemdesign/tini:ubuntu-focal
 
 LABEL   os="ubuntu focal" \
         container.description="oracle jdk" \
-        version="jdk11" \
+        version="jdk17" \
         maintainer="devops <devops@aem.design>" \
         imagename="oracle-jdk" \
         test.command=" java --version" \
-        test.command.verify="11."
+        test.command.verify="17."
 
-ARG FILE_NAME="jdk-11.0.14_linux-x64_bin.tar.gz"
+ARG FILE_NAME="jdk-17.0.14_linux-x64_bin.tar.gz"
 
-ENV JAVA_HOME="/opt/jdk-11.0.14/"
+ENV JAVA_HOME="/opt/jdk-17.0.14/"
 
 ADD packages/${FILE_NAME} /opt/
 
