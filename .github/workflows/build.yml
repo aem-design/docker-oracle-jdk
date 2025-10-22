@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - '*'
+    tags:
+      - '*'
 
 jobs:
   build:
@@ -57,7 +59,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           load: true
           build-args: |
             "FILE_NAME=jdk-17.0.14_linux-x64_bin.tar.gz"
@@ -71,12 +73,35 @@ jobs:
           cd test && bash ./run_tests.sh "ghcr.io/$GITHUB_REPOSITORY_OWNER/$IMAGE:$GIT_BRANCH"
 
       - name: Run docker image analysis
+        continue-on-error: true
         uses: MaxymVlasov/dive-action@v1.4.0
         with:
           image:  ${{ steps.docker_build.outputs.imageid }}
           config-file: ${{ github.workspace }}/.dive-ci.yml
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Generate tags
+        id: tags
+        run: |
+          # Check if this is a tag push
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            # Extract tag name (e.g., refs/tags/2.0.187 -> 2.0.187)
+            VERSION_TAG="${{ github.ref_name }}"
+            TAGS="${IMAGE}:${VERSION_TAG}"
+            TAGS="${TAGS},ghcr.io/${GITHUB_REPOSITORY_OWNER}/${IMAGE}:${VERSION_TAG}"
+            echo "Building from git tag: ${VERSION_TAG}"
+          else
+            # Branch push - use branch name
+            TAGS="${IMAGE}:${GIT_BRANCH}"
+            TAGS="${TAGS},ghcr.io/${GITHUB_REPOSITORY_OWNER}/${IMAGE}:${GIT_BRANCH}"
+            if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+              TAGS="${TAGS},${IMAGE}:latest"
+              TAGS="${TAGS},ghcr.io/${GITHUB_REPOSITORY_OWNER}/${IMAGE}:latest"
+            fi
+            echo "Building from branch: ${GIT_BRANCH}"
+          fi
+          echo "tags=${TAGS}" >> $GITHUB_OUTPUT
+          echo "Generated tags: ${TAGS}"
 
       - name: Build and push
         uses: docker/build-push-action@v2
@@ -86,9 +111,7 @@ jobs:
           push: true
           build-args: |
             "JDK_DRIVEID=${{ env.JDK_DRIVEID }}"
-          tags: |
-            ${{ env.IMAGE }}:${{ env.GIT_BRANCH }}
-            ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.GIT_BRANCH }}
+          tags: ${{ steps.tags.outputs.tags }}
 
       - name: Update Docker Hub Description
         uses: peter-evans/dockerhub-description@v2
