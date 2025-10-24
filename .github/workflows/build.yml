@@ -107,7 +107,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           build-args: |
             "JDK_DRIVEID=${{ env.JDK_DRIVEID }}"
@@ -121,9 +121,9 @@ jobs:
           password: ${{ env.DOCKER_PASSWORD }}
           repository: peterevans/dockerhub-description
       - uses: meeDamian/github-release@1.0
-        if: github.ref == 'refs/heads/master'
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ env.GITHUB_TAG }}
-          name: ${{ env.GITHUB_TAG }}
+          tag: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
           body: ${{ env.GIT_RELEASE_NOTES }}

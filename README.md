@@ -10,7 +10,7 @@
 
 This is docker image based on [aemdesign/tini](https://hub.docker.com/r/aemdesign/tini/) with Oracle JDK added.
 
-Multi-architecture support (amd64/arm64).
+Docker image for linux/amd64 (also runs on Apple Silicon via Rosetta 2).
 
 ## Docker Images
 
@@ -36,11 +36,50 @@ Following is the list of packages included
 
 The project uses GitHub Actions for continuous integration and deployment:
 
-- **Multi-platform builds**: Images are built for both `linux/amd64` and `linux/arm64`
+- **Platform**: Images are built for `linux/amd64`
+- **Apple Silicon support**: Works seamlessly on M1/M2/M3/M4 Macs via Docker Desktop's Rosetta 2 emulation
 - **Automated testing**: Each build is tested before pushing
 - **Image analysis**: Uses `dive` for Docker image layer analysis
 - **Dual registry push**: Automatically pushes to Docker Hub and GitHub Container Registry
 - **Git tag versioning**: Pushing a git tag automatically creates a corresponding Docker image tag
+
+### Running on Apple Silicon Macs (M1/M2/M3/M4)
+
+This image is built for `linux/amd64` architecture but runs seamlessly on Apple Silicon Macs through **Rosetta 2** emulation in Docker Desktop.
+
+#### Prerequisites
+
+1. **Docker Desktop for Mac** (version 4.25.0 or later recommended)
+   - Download from: https://www.docker.com/products/docker-desktop
+
+2. **Rosetta 2** (usually already installed on modern macOS)
+   - To verify/install: `softwareupdate --install-rosetta`
+
+#### Enable Rosetta 2 in Docker Desktop
+
+1. Open **Docker Desktop**
+2. Go to **Settings** (⚙️ icon) → **General**
+3. Enable **"Use Rosetta for x86_64/amd64 emulation on Apple Silicon"**
+4. Click **Apply & Restart**
+
+![Docker Desktop Rosetta Setting](https://docs.docker.com/desktop/images/rosetta.png)
+
+#### Verify It's Working
+
+```bash
+# Pull and run the image
+docker pull aemdesign/oracle-jdk:latest
+docker run --rm aemdesign/oracle-jdk:latest uname -m
+
+# Expected output: x86_64 (running via Rosetta 2)
+```
+
+#### Performance Notes
+
+- **Rosetta 2 emulation** provides near-native performance for most workloads
+- First container start may be slightly slower (Rosetta translation cache warmup)
+- Subsequent starts are fast
+- **No code changes needed** - everything works transparently
 
 ### Monitoring Pipeline Status
 
