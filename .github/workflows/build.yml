@@ -16,8 +16,7 @@ jobs:
       ORGANISATION_NAME: aemdesign
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
-      JDK_DRIVEID: ${{ secrets.JDK17_ORACLE_DRIVEID }}
+      JDK_DOWNLOAD_URL: "https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz"
 
 
     steps:
@@ -46,13 +45,10 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download Files from Google Drive
-        uses: docker://gvfn/gdrive
-        with:
-          entrypoint: "/bin/sh"
-          args: |
-            -c "\
-            gdrive --config /gdrive --service-account-evar SERVICE_ACCOUNT_JSON download --path /github/workspace/packages/ ${JDK_DRIVEID}
+      - name: Download JDK from Oracle
+        run: |
+          mkdir -p packages
+          curl -L -o packages/jdk-21_linux-x64_bin.tar.gz "${JDK_DOWNLOAD_URL}"
 
       - name: Build and export to Docker
         id: docker_build
@@ -62,7 +58,7 @@ jobs:
           platforms: linux/amd64
           load: true
           build-args: |
-            "FILE_NAME=jdk-17.0.14_linux-x64_bin.tar.gz"
+            "FILE_NAME=jdk-21_linux-x64_bin.tar.gz"
           tags: |
             ${{ env.IMAGE }}:${{ env.GIT_BRANCH }}
             ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}:${{ env.GIT_BRANCH }}
@@ -110,7 +106,7 @@ jobs:
           platforms: linux/amd64
           push: true
           build-args: |
-            "JDK_DRIVEID=${{ env.JDK_DRIVEID }}"
+            "FILE_NAME=jdk-21_linux-x64_bin.tar.gz"
           tags: ${{ steps.tags.outputs.tags }}
 
       - name: Update Docker Hub Description
